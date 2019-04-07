@@ -1,4 +1,4 @@
-FROM armv7/armhf-debian
+FROM arm32v7/armhf-debian
 
 WORKDIR /root
 
