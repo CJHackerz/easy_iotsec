@@ -12,4 +12,4 @@ RUN wget -q -O- https://github.com/hugsy/gef/raw/master/scripts/gef.sh | sh
 RUN git clone https://github.com/craigz28/firmwalker
 RUN git clone https://github.com/rampageX/firmware-mod-kit.git
 
-CMD echo "Made by CJHackerz"
+CMD echo "test"
