@@ -103,11 +103,11 @@ if __name__ == '__main__':
             os.system("sudo docker build -t cjhackerz/easy_iotsec-arm:latest .")
             os.system("mkdir workspace")
             print("[*]Dropping you into container shell...")
-            os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iot:latest /bin/bash")
+            os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iotsec-arm:latest /bin/bash")
         elif ans == 'f':
             print("[!]Going to pull container from docker hub, this requires internet connection...")
             print("Please run 'sudo docker run --rm --privileged multiarch/qemu-user-static:register' command if you get any error")
             os.system("sudo docker pull cjhackerz/easy_iotsec-arm:latest")
             os.system("mkdir workspace")
             print("[*]Dropping you into container shell...")
-            os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iot:latest /bin/bash")
+            os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iotsec-arm:latest /bin/bash")
