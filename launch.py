@@ -99,13 +99,13 @@ if __name__ == '__main__':
         ans = input("[*]Everything seems fine, want to build or fetch new one?[b/f] ")
         if ans == 'b':
             print("[!]This is going to take some time have some coffee and comback :)")
-            os.system("sudo docker build -t cjhackerz/easy_iot:latest .")
+            os.system("sudo docker build -t cjhackerz/easy_iot-arm:latest .")
             os.system("mkdir workspace")
             print("[*]Dropping you into container shell...")
             os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iot:latest /bin/bash")
         elif ans == 'f':
             print("[!]Going to pull container from docker hub, this requires internet connection...")
-            os.system("sudo docker pull cjhackerz/easy_iot:latest")
+            os.system("sudo docker pull cjhackerz/easy_iot-arm:latest")
             os.system("mkdir workspace")
             print("[*]Dropping you into container shell...")
             os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iot:latest /bin/bash")
