@@ -24,7 +24,7 @@ class easy_iot:
             os.system("sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common")
             os.system("curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -")
             os.system("sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'")
-            os.system("sudo apt update && udo apt-get install docker-ce docker-ce-cli containerd.io")
+            os.system("sudo apt update && sudo apt-get install docker-ce docker-ce-cli containerd.io")
             return True
         
         elif subprocess.getoutput('lsb_release -is') == 'Debian':
@@ -33,7 +33,7 @@ class easy_iot:
             os.system("sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common")
             os.system("curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -")
             os.system("sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable'")
-            os.system("sudo apt update && udo apt-get install docker-ce docker-ce-cli containerd.io")
+            os.system("sudo apt update && sudo apt-get install docker-ce docker-ce-cli containerd.io")
             return True
         
         elif subprocess.getoutput('lsb_release -is') == 'Kali':
@@ -42,7 +42,7 @@ class easy_iot:
             os.system("sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common")
             os.system("curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -")
             os.system("sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable'")
-            os.system("sudo apt update && udo apt-get install docker-ce docker-ce-cli containerd.io")
+            os.system("sudo apt update && sudo apt-get install docker-ce docker-ce-cli containerd.io")
             return True
 
         else:
@@ -58,8 +58,17 @@ class easy_iot:
     
     def installQemu(self):
         print("[*]Going to install qemu and binfmt-support for multiarch in docker")
-        a = subprocess.getstatusoutput("sudo apt install -y qemu qemu-user-static qemu-user binfmt-support -y")
+        a = subprocess.getstatusoutput("sudo apt install -y qemu qemu-user-static qemu-user binfmt-support gcc-arm-linux-gnueabihf -y")
         b = subprocess.getstatusoutput("sudo docker run --rm --privileged multiarch/qemu-user-static:register")
+        
+        if subprocess.getoutput('echo $SHELL') == '/bin/bash':
+            os.system("echo '#ARM transparent execution' >> $HOME/.bashrc")
+            os.system("echo 'export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf' >> $HOME/.bashrc")
+
+        if subprocess.getoutput('echo $SHELL') == '/usr/bin/zsh':
+            os.system("echo '#ARM transparent execution' >> $HOME/.zshrc")
+            os.system("echo 'export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf' >> $HOME/.zshrc")
+
         if a[0] == 0 and b[0] == 0:
             return True
         else: 
@@ -69,33 +78,27 @@ if __name__ == '__main__':
     x = easy_iot()
 
     if x.detectDocker() == False:
-        print("[!]Error: Could not find docker want to install it?[y/Y/n/N] ")
-        ans = input()
-        if ans == 'y' or ans == 'Y':print("[!]Error: Could not find docker want to install it?[y/Y/n/N] ")
-        ans = input()
+        ans = input("[!]Error: Could not find docker want to install it?[y/Y/n/N] ")
         if ans == 'y' or ans == 'Y':
-            status = x.installDocker()
-            if status == False:
-                print("[!]Error: Could not install docker can't continue")
+            ans = input()
+            if ans == 'y' or ans == 'Y':
+                status = x.installDocker()
+                if status == False:
+                    print("[!]Error: Could not install docker can't continue")
         else:
             print("[!]Can't continue without docker, come back and rerun this script one you change your mind....")
-            status = x.installDocker()
-            if status == False:
-                print("[!]Error: Could not install docker can't continue")
-            else:
-                print("[!]Can't continue without docker, come back and rerun this script one you change your mind....")
+            
     elif x.detectQemu() == False:
-        print("[!]Error: Could not find qemu want to install it?[y/Y/n/N] ")
-        ans = input()
+        ans = input("[!]Error: Could not find qemu want to install it?[y/Y/n/N] ")
         if ans == 'y' or ans == 'Y':
             status = x.installQemu()
             if status == False:
                 print("[!]Error: Could not install qemu can't continue")
         else:
             print("[!]Can't continue without qemu, come back and rerun this script one you change your mind....")
+    
     else:
-        print("[*]Everything seems fine, want to build or fetch new one?[b/f] ")
-        ans = input()
+        ans = input("[*]Everything seems fine, want to build or fetch new one?[b/f] ")
         if ans == 'b':
             print("[!]This is going to take some time have some coffee and comback :)")
             os.system("sudo docker build -t cjhackerz/easy_iot:latest .")
