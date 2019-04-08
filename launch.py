@@ -35,6 +35,15 @@ class easy_iot:
             os.system("sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable'")
             os.system("sudo apt update && udo apt-get install docker-ce docker-ce-cli containerd.io")
             return True
+        
+        elif subprocess.getoutput('lsb_release -is') == 'Kali':
+            print("[*]Going to install Docker on system, please enter the admin password if prompted")
+            os.system("sudo apt-get update")
+            os.system("sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common")
+            os.system("curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -")
+            os.system("sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable'")
+            os.system("sudo apt update && udo apt-get install docker-ce docker-ce-cli containerd.io")
+            return True
 
         else:
             print("[!]Error: Current script only supports Debian and Ubuntu based distros")
