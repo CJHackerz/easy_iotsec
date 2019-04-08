@@ -109,4 +109,3 @@ if __name__ == '__main__':
             os.system("mkdir workspace")
             print("[*]Dropping you into container shell...")
             os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iot:latest /bin/bash")
-        os.system()
