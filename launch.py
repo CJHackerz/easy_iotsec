@@ -32,7 +32,7 @@ class easy_iot:
             os.system("sudo apt-get update -y")
             os.system("sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common -y")
             os.system("curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -")
-            os.system("sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/debian {} stable'".format(subprocess.getoutput('lsb_release -cs'))))
+            os.system("sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/debian {} stable'".format(subprocess.getoutput('lsb_release -cs')))
             os.system("sudo apt update -y && sudo apt-get install docker-ce docker-ce-cli containerd.io -y")
             return True
         
