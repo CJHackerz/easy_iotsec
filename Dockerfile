@@ -1,7 +1,8 @@
 FROM arm32v7/debian
 
 WORKDIR /root
-VOLUME [ "/root" ]
+RUN mkdir workspace
+VOLUME [ "/root/workspace" ]
 
 RUN apt update -y
 RUN apt upgrade -y
