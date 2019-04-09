@@ -1,6 +1,6 @@
 # easy_iotsec-arm
 
-Contains example python script to build armv7 based debian container environment for static binary analysis
+Contains python script to build armv7 based debian container environment for static binary analysis
 
 ## Features
 
