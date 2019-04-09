@@ -2,6 +2,7 @@
 import os
 import subprocess
 
+#Core functionalities
 class easy_iot:
 
     def __init__(self):
@@ -20,18 +21,26 @@ class easy_iot:
     def installDocker(self):
         if subprocess.getoutput('lsb_release -is') == 'Ubuntu':
             print("[*]Going to install Docker on system, please enter the admin password if prompted")
-            os.system("./scripts/docker_ubuntu.sh")
-            return True
+            try:
+                subprocess.call("./scripts/docker_ubuntu.sh")
+                return True
+            except OSError:
+                return False
         
         elif subprocess.getoutput('lsb_release -is') == 'Debian':
             print("[*]Going to install Docker on system, please enter the admin password if prompted")
-            os.system("./scripts/docker_debian.sh")
-            return True
+            try:
+                subprocess.call("./scripts/docker_debian.sh")
+                return True
+            except OSError:
+                return False
         
         elif subprocess.getoutput('lsb_release -is') == 'Kali':
             print("[*]Going to install Docker on system, please enter the admin password if prompted")
-            os.system("./scripts/docker_kali.sh")
-            return True
+            try:
+                subprocess.call("./scripts/docker_kali.sh")
+            except OSError:
+                return False
 
         else:
             print("[!]Error: Current script only supports Debian and Ubuntu based distros")
@@ -46,45 +55,22 @@ class easy_iot:
     
     def installQemu(self):
         print("[*]Going to install qemu and binfmt-support for multiarch in docker")
-        a = subprocess.getstatusoutput("sudo apt install qemu qemu-user-static qemu-user binfmt-support gcc-arm-linux-gnueabihf -y")
-        b = subprocess.getstatusoutput("sudo docker run --rm --privileged multiarch/qemu-user-static:register")
-        
-        if subprocess.getoutput('echo $SHELL') == '/bin/bash':
-            os.system("echo '#ARM transparent execution' >> $HOME/.bashrc")
-            os.system("echo 'export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf' >> $HOME/.bashrc")
+        try:
+            subprocess.call("./scripts/qemu_install.sh")
 
-        if subprocess.getoutput('echo $SHELL') == '/usr/bin/zsh':
-            os.system("echo '#ARM transparent execution' >> $HOME/.zshrc")
-            os.system("echo 'export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf' >> $HOME/.zshrc")
+            if subprocess.getoutput('echo $SHELL') == '/bin/bash':
+                os.system("echo '#ARM transparent execution' >> $HOME/.bashrc")
+                os.system("echo 'export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf' >> $HOME/.bashrc")
 
-        if a[0] == 0 and b[0] == 0:
+            if subprocess.getoutput('echo $SHELL') == '/usr/bin/zsh':
+                os.system("echo '#ARM transparent execution' >> $HOME/.zshrc")
+                os.system("echo 'export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf' >> $HOME/.zshrc")
             return True
-        else: 
-            False
+        
+        except OSError:
+            return False
 
-if __name__ == '__main__':
-    x = easy_iot()
-    os.system("find $PWD/scripts -type f -exec chmod 770 {} \;")
-
-    if x.detectDocker() == False:
-        ans = input("[!]Error: Could not find docker want to install it?[y/Y/n/N] ")
-        if ans == 'y' or ans == 'Y':
-            status = x.installDocker()
-            if status == False:
-                print("[!]Error: Could not install docker can't continue")
-        else:
-            print("[!]Can't continue without docker, come back and rerun this script one you change your mind....")
-            
-    elif x.detectQemu() == False:
-        ans = input("[!]Error: Could not find qemu want to install it?[y/Y/n/N] ")
-        if ans == 'y' or ans == 'Y':
-            status = x.installQemu()
-            if status == False:
-                print("[!]Error: Could not install qemu can't continue")
-        else:
-            print("[!]Can't continue without qemu, come back and rerun this script one you change your mind....")
-    
-    else:
+    def runContainer(self):
         ans = input("[*]Everything seems fine, want to build or fetch new one?[b/f] ")
         if ans == 'b':
             print("[!]This is going to take some time have some coffee and comback :)")
@@ -100,3 +86,66 @@ if __name__ == '__main__':
             os.system("mkdir workspace")
             print("[*]Dropping you into container shell...")
             os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iotsec-arm:latest /bin/bash")
+
+
+#Custom Exception handlers
+class ErrorHandler(Exception):
+    pass
+
+class QemuError(ErrorHandler):
+    pass
+
+class DockerError(ErrorHandler):
+    pass
+
+class NothingFoundError(ErrorHandler):
+    pass
+
+if __name__ == '__main__':
+    x = easy_iot()
+    os.system("find $PWD/scripts -type f -exec chmod 770 {} \;")
+
+    try:
+        if x.detectDocker() == False and x.detectQemu() == False:
+            raise NothingFoundError
+        elif x.detectDocker() == False:
+            raise DockerError
+        elif x.detectQemu() == False:
+            raise QemuError
+        else:
+            x.runContainer()
+    
+    except (NothingFoundError):
+        ans = input("[!]Error: Could not find docker want to install it?[y/Y/n/N] ")
+        if ans == 'y' or ans == 'Y':
+            status = x.installDocker()
+            if status == False:
+                print("[!]Error: Could not install docker can't continue")
+        else:
+            print("[!]Can't continue without docker, come back and rerun this script one you change your mind....")
+
+        ans = input("[!]Error: Could not find qemu want to install it?[y/Y/n/N] ")
+        if ans == 'y' or ans == 'Y':
+            status = x.installQemu()
+            if status == False:
+                print("[!]Error: Could not install qemu can't continue")
+        else:
+            print("[!]Can't continue without qemu, come back and rerun this script one you change your mind....")
+
+    except (DockerError):
+        ans = input("[!]Error: Could not find docker want to install it?[y/Y/n/N] ")
+        if ans == 'y' or ans == 'Y':
+            status = x.installDocker()
+            if status == False:
+                print("[!]Error: Could not install docker can't continue")
+        else:
+            print("[!]Can't continue without docker, come back and rerun this script one you change your mind....")
+    
+    except (QemuError):
+        ans = input("[!]Error: Could not find qemu want to install it?[y/Y/n/N] ")
+        if ans == 'y' or ans == 'Y':
+            status = x.installQemu()
+            if status == False:
+                print("[!]Error: Could not install qemu can't continue")
+        else:
+            print("[!]Can't continue without qemu, come back and rerun this script one you change your mind....")
