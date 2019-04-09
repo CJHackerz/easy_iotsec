@@ -20,17 +20,17 @@ class easy_iot:
     def installDocker(self):
         if subprocess.getoutput('lsb_release -is') == 'Ubuntu':
             print("[*]Going to install Docker on system, please enter the admin password if prompted")
-            os.system("./scripts/ubuntu_docker.sh")
+            os.system("/bin/bash scripts/ubuntu_docker.sh")
             return True
         
         elif subprocess.getoutput('lsb_release -is') == 'Debian':
             print("[*]Going to install Docker on system, please enter the admin password if prompted")
-            os.system("./scripts/debian_docker.sh")
+            os.system("/bin/bash scripts/debian_docker.sh")
             return True
         
         elif subprocess.getoutput('lsb_release -is') == 'Kali':
             print("[*]Going to install Docker on system, please enter the admin password if prompted")
-            os.system("./scripts/kali_docker.sh")
+            os.system("/bin/bash scripts/kali_docker.sh")
             return True
 
         else:
