@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 import subprocess
-
+import time
 #Core functionalities
 class easy_iot:
 
@@ -123,7 +123,9 @@ if __name__ == '__main__':
                 print("[!]Error: Could not install docker can't continue")
         else:
             print("[!]Can't continue without docker, come back and rerun this script one you change your mind....")
-
+        
+        time.sleep(1)
+        
         ans = input("[!]Error: Could not find qemu want to install it?[y/Y/n/N] ")
         if ans == 'y' or ans == 'Y':
             status = x.installQemu()
