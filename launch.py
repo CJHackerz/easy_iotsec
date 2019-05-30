@@ -2,10 +2,12 @@
 import os
 import subprocess
 import time
+import colorama
 #Core functionalities
 class easy_iot:
 
     def __init__(self):
+        self.grabBanner(os.getcwd(), filename="main.txt")
         print("##########################################")
         print("Welcome to easy_iot-arm installer script")
         print("##########################################")
@@ -87,6 +89,11 @@ class easy_iot:
             print("[*]Dropping you into container shell...")
             os.system("sudo docker run -it -v $PWD/workspace:/root/workspace cjhackerz/easy_iotsec-arm:latest /bin/bash")
 
+    def grabBanner(self, path, filename):
+        f = open(path + "/banners/" + filename, "r")
+        ban_data = f.read()
+        print(ban_data)
+        f.close()
 
 #Custom Exception handlers
 class ErrorHandler(Exception):
