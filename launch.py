@@ -131,6 +131,8 @@ if __name__ == '__main__':
             status = x.installQemu()
             if status == False:
                 print("[!]Error: Could not install qemu can't continue")
+            else:
+                x.runContainer()
         else:
             print("[!]Can't continue without qemu, come back and rerun this script one you change your mind....")
 
@@ -140,6 +142,8 @@ if __name__ == '__main__':
             status = x.installDocker()
             if status == False:
                 print("[!]Error: Could not install docker can't continue")
+            else:
+                x.runContainer()
         else:
             print("[!]Can't continue without docker, come back and rerun this script one you change your mind....")
     
@@ -149,5 +153,7 @@ if __name__ == '__main__':
             status = x.installQemu()
             if status == False:
                 print("[!]Error: Could not install qemu can't continue")
+            else:
+                x.runContainer()
         else:
             print("[!]Can't continue without qemu, come back and rerun this script one you change your mind....")
