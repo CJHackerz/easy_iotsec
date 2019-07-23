@@ -130,4 +130,7 @@ dmypy.json
 #Docker volume directory
 workspace
 
+#Tex editor
+.vscode
+
 # End of https://www.gitignore.io/api/python
