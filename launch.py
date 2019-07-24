@@ -2,16 +2,17 @@
 import os
 import subprocess
 import time
-import colorama
+from colorama import init, Fore, Back, Style
+
+init(autoreset=True)
+
 #Core functionalities
 class easy_iot:
 
     def __init__(self):
         self.grabBanner(os.getcwd(), filename="main.txt")
-        print("##########################################")
-        print("Welcome to easy_iot-arm installer script")
-        print("##########################################")
-        print("> This script will install install all neccessary stuff to install arm based docker environment")
+        print(Fore.YELLOW + "# ARM based container environment for IoT security research work")
+        print(Fore.GREEN + "> This script will install all neccessary stuff to have arm based docker environment for reverse engineering")
     
     def detectDocker(self):
         if subprocess.getoutput("which docker") != '/usr/bin/docker':
@@ -92,7 +93,7 @@ class easy_iot:
     def grabBanner(self, path, filename):
         f = open(path + "/banners/" + filename, "r")
         ban_data = f.read()
-        print(ban_data)
+        print( Fore.RED + ban_data)
         f.close()
 
 #Custom Exception handlers
