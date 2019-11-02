@@ -33,8 +33,10 @@ __Just spawn shell__
 
 
 ```bash
-sudo docker run -it cjhackerz/easy_iotsec-arm /bin/bash
+sudo docker run --privileged --cap-add SYS_PTRACE -it cjhackerz/easy_iotsec-arm /bin/bash
 ```
+
+__NOTE: --privileged --cap-add SYS_PTRACE flags are necessary to run gdb inside docker container__
 
 *if you already have docker on system simply run qemu_install.sh script from scripts directory and above command will fetch container image from docker hub built by me*
 
